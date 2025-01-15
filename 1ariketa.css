@@ -1,19 +1,35 @@
-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 20px;
-}
-table, th, td {
-    border: 1px solid #dddddd;
-}
-th, td {
-    padding: 10px;
-    text-align: left;
-}
-th {
-    background-color: #f4f4f4;
-}
-a{
-    text-decoration: none;
-    color:green;
-}
+table { /* Taularen propietateak definitzeko ireki du deklarazioa */
+
+    width: 100%; /* Taulari gurasoaren zabalera guztia eman dio width erabilita */
+
+    border-collapse: collapse;  /* taularen bordeak konbinatu daitezen border-colapse : colapse erabili du */
+
+    margin-top: 20px;   /* taulari margin bat eman dio 20px duena taula pixka bat jaisteko */
+
+}   /* Amaitzean deklarazioa itxi egin du */
+
+table, th, td { /* Taularen, th etiketaren eta td etiketaren propietateak definitzeko ireki du deklarazioa */
+
+    border: 1px solid #dddddd;  /* Bere taularen eta etiketei borde bat eman dio 1px koa eta solidoa */
+
+}   /* Amaitzean deklarazioa itxi egin du */
+
+th, td {    /* th etiketa eta td etiketa propietateak definitzeko ireki du deklarazioa */
+
+    padding: 10px;  /* elkarren artean dagoen tokia handitu du */
+
+    text-align: left;   /* th eta td etiketen idatzitako testua ezkerrean ezarri du */
+
+}   /* Amaitzean deklarazioa itxi egin du */
+
+th {    /* Taularen propietateak definitzeko ireki du selektorea */
+
+    background-color: #f4f4f4;  /* taularen th etiketari atzeko fondoa ezarri dio */
+    
+}   /* Amaitzean deklarazioa itxi egin du */
+
+a{  /* a etiketak definitzeko ireki du deklarazioa */
+
+    text-decoration: none;  /* Erabili dituen link-ak ireki ondoren azpimarratuta atera ez daitezen dekorazioa kendu dio*/
+
+}   /* Amaitzean deklarazioa itxi egin du */
