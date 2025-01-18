@@ -6,14 +6,24 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Produktu Zerrenda</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <link rel="stylesheet" href="ariketak.css">
+    <link rel="stylesheet" href="../ariketak.css">
 </head>
 
 <body>
     <?php
-    require_once("db.php");
+    require_once("../db.php");
 
-    $sql = "SELECT id, izena, mota, prezioa FROM produktuak";
+    $bilaketa = '';
+    if (isset($_GET['bilaketa'])) {
+        $bilaketa = $_GET['bilaketa'];
+    }
+    
+    // bilaketaren filtroa aplikatu dezan bakarrik aldaketa kodean
+    if ($bilaketa != '') {
+        $sql = "SELECT id, izena, mota, prezioa FROM produktuak WHERE izena LIKE '%$bilaketa%'";
+    }else {
+        $sql = "SELECT id, izena, mota, prezioa FROM produktuak";
+    }
 
     $result = $conn->query($sql);
     ?>
@@ -21,10 +31,10 @@
     <h1>Produktu Zerrenda</h1>
 
     <!-- Akzioa aldatu diot fitxategi bakoitzak bere filtroei begiratzeko -->
-    <form action="1ariketa.php" method="GET">
+    <form action="2ariketa.php" method="GET">
 
         <label for="bilaketa">Bilatu:</label>
-        <input type="text" class="bilaketa" name="bilaketa" id="bilaketa" value="">
+        <input type="text" class="bilaketa" name="bilaketa" id="bilaketa" value="<?php echo $bilaketa; ?>">
         <input type="submit" value="Filtratu">
         <select id="mota" name="mota">
             <option></option>
@@ -35,7 +45,7 @@
         </select>
     </form> <br>
 
-    <a href="5ariketa.php"> <!-- esteka bat ezarrita dago 5ariketa.php ra eramango diona -->
+    <a href="2ariketainsert.php"> <!-- esteka bat ezarrita dago 5ariketa.php ra eramango diona -->
         <!-- ikono bat txertatu du eta izenburua ezarri dio gainean zaudenean testua agertu dadin -->
         <i class="fa fa-plus" aria-hidden="true" title="Produktu Berria Gehitu"></i>
     </a> <!-- a etiketa itxi da -->
@@ -59,10 +69,10 @@
                     echo "<td>" . $row['mota'] . "</td>";
                     echo "<td>" . $row['prezioa'] . "</td>";
                     echo "<td>
-                            <a href=\"6ariketa.php?id=" . $row["id"] . "\">
+                            <a href=\"2ariketaupdate.php?id=" . $row["id"] . "\">
                                 <i class='fas fa-pencil' title='Editatu'></i>
                             </a>
-                            <a href=\"7ariketa.php?id=" . $row["id"] . "\">
+                            <a href=\"2ariketadelete.php?id=" . $row["id"] . "\">
                                 <i class='fas fa-trash' title='Ezabatu'></i>
                             </a>
                           </td>";
