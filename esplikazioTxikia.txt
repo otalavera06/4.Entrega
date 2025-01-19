@@ -1,5 +1,7 @@
 2, 3 eta 4 ariketak banakako karpetetan banatu ditut.
 
+Eragiketak amaitzean eta ongi egiten badira redirekzioak sortu ditut berriro ere aurreko orria eraman dezan.
+
 Eragiketak egiten amaitzean berriro ere bere fitxategira bueltatu izan zedin, 
 bakoitzari insert update eta delete dokumentuak ezarri dizkiot denek funtzionatu dezaten.
 
