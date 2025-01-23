@@ -1,78 +1,71 @@
-<!DOCTYPE html> <!-- Dokumentu mota HTML dela adierazten du -->
-<html lang="eu"> <!-- HTML ireki eta euskara dokumentuaren hizkuntza gisa ezartzen du -->
+<?php
+$servername = "localhost"; // Zerbitzariaren izena
+$username = "root"; // Erabiltzailearen izena
+$password = "1MG2024"; // Erabiltzailearen pasahitza
+$dbname = "ml"; // Datu-basearen izena
 
-<head> <!-- Head ireki -->
-    <meta charset="UTF-8"> <!-- Kodifikazioa UTF-8 dela definitzen du -->
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- Mugikorretarako optimizatzeko -->
-    <title>Editatu Produktua</title> <!-- Orriaren titulua nabigatzaileko leihoan -->
-    <link rel="stylesheet" href="1ariketa.css"> <!-- CSS estilo fitxategiarekin konexioa -->
-</head> <!-- Head itxi -->
+// MySQL konexioa sortu
+$conn = new mysqli($servername, $username, $password, $dbname);
 
-<body> <!-- Body ireki -->
-    <?php //php erabiltzeko etiketa
-    $servername = "localhost"; //Datu baseko zerbitzaria aldagai batean gorde
-    $username = "root"; //Datu baseko erabiltzailea aldagai batean gorde
-    $password = "1MG2024"; //Datu baseko pasahitza aldagai batean gorde
-    $dbname = "ml"; //Datu baseko eskema izena aldagai batean gorde
-    
-    $conn = new mysqli($servername, $username, $password, $dbname); //Datu basearekin konexioa egin emandako datuak erabiliz
-    
-    if ($conn->connect_error) {
-        die("Errorea konektatzean: " . $conn->connect_error); //Konexio errore bat gertatzen bada mezua erakutxi eta exekuzioa gelditu
-    }
+// Konexioaren errorea egiaztatu
+if ($conn->connect_error) {
+    die("Errorea konektatzean: " . $conn->connect_error); // Errorea badago, programa gelditu
+}
 
-    $row = ""; //row huts bezala hasieratu
-    $idProduktua = ""; //id-a huts bezala hasieratu
-    $izena = ""; //izena huts bezala hasieratu
-    $mota = ""; //Mota huts bezala hasieratu
-    $prezioa = ""; //Prezioa huts bezala hasieratu
-    if (isset($_GET["izena"])) { //Get array-an izena parametroak balioa duen ala ez egiaztatu
-        $izena = ($_GET["izena"]); //Hala bada aldagai bean gorde
-    }
-    if (isset($_GET["idProduktua"])) {  //Get array-an idProduktua parametroak balioa duen ala ez egiaztatu
-        $idProduktua = ($_GET["idProduktua"]);//Hala bada aldagai bean gorde
-    }
-    if (isset($_GET["mota"])) {  //Get array-an mota parametroak balioa duen ala ez egiaztatu
-        $mota = ($_GET["mota"]);//Hala bada aldagai bean gorde
-    }
-    if (isset($_GET["prezioa"])) {  //Get array-an prezioa parametroak balioa duen ala ez egiaztatu
-        $prezioa = ($_GET["prezioa"]);//Hala bada aldagai bean gorde
-    }
-    ?><!-- PHP itxi -->
+// GET bidez jasotako datuak gordetzen dira
+$id = $_GET['id'] ?? ''; // Produktuaren IDa jasotzen da, hutsik badator balio lehenetsia ''
+$izena = $_GET['izena'] ?? ''; // Produktuaren izena jasotzen da edo hutsik uzten da
+$mota = $_GET['mota'] ?? ''; // Produktuaren mota jasotzen da edo hutsik uzten da
+$prezioa = $_GET['prezioa'] ?? ''; // Produktuaren prezioa jasotzen da edo hutsik uzten da
 
-    <form method="get"> <!-- Formularioa ireki, get metodoarekin -->
+// POST metodoarekin formularioa bidali denean
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $id = $_POST['id']; // Produktuaren IDa formularioan bidalitako datuetatik
+    $izena = $_POST['izena']; // Produktuaren izena formularioan bidalitako datuetatik
+    $mota = $_POST['mota']; // Produktuaren mota formularioan bidalitako datuetatik
+    $prezioa = $_POST['prezioa']; // Produktuaren prezioa formularioan bidalitako datuetatik
+
+    // Datuak eguneratzeko SQL kontsulta
+    $sql = "UPDATE produktuak SET izena='$izena', mota='$mota', prezioa='$prezioa' WHERE id='$id'";
+
+    // Kontsulta exekutatu eta emaitza egiaztatu
+    if ($conn->query($sql) === TRUE) {
+        echo "Erregistroa arrakastaz eguneratu da!"; // Arrakasta-mezua
+    } else {
+        echo "Errorea eguneratzean: " . $conn->error; // Errorea badago, errore-mezua
+    }
+}
+?>
+<!DOCTYPE html>
+<html lang="eu">
+
+<head>
+    <meta charset="UTF-8"> <!-- Orriaren karaktere-kodetzea -->
+    <title>Editatu Produktua</title> <!-- Orriaren izenburua -->
+    <link rel="stylesheet" href="1ariketa.css"> <!-- Kanpoko CSS fitxategia lotzen da -->
+</head>
+
+<body>
+    <h1>Produktu Editatu</h1> <!-- Orriaren goiburua -->
+    <form method="POST"> <!-- Formularioa POST metodoarekin -->
+        <input type="hidden" name="id" value="<?= htmlspecialchars($id) ?>"> <!-- Produktuaren IDa ezkutuan gordetzen da -->
+        <label for="izena">Izena:</label> <!-- Izena sartzeko etiketa -->
+        <input type="text" name="izena" id="izena" value="<?= htmlspecialchars($izena) ?>" required> <!-- Izena sartzeko laukia -->
         <br>
-        <label for="izena"> <strong>Erregistroa sartu: </strong></label> <!-- Izena input-aretntzat textua -->
-        <br>
-        <input type="text" name="idProduktua" id="idProduktua" value="" placeholder="sartu id-a" />
-        <!-- ID-a sartzeko textu kutxa, placeholder gisa mezu bat -->
-        <input type="text" name="izena" id="izena" value="" placeholder="sartu izena" />
-        <!-- Izena sartzeko textu kutxa -->
-        <select id="mota" name="mota" required> <!-- Mota aukeratzeko select bat -->
-            <option value="Portatil">Portatil</option> <!-- Aukera bat -->
-            <option value="Kontsola">Kontsola</option> <!-- Aukera bat -->
-            <option value="Periferiko">Periferiko</option> <!-- Aukera bat -->
-            <option value="Cascos">Cascos</option> <!-- Aukera bat -->
+        <label for="mota">Mota:</label> <!-- Mota aukeratzeko etiketa -->
+        <select id="mota" name="mota" required> <!-- Aukeraketa zerrenda -->
+            <option value="Portatil" <?= $mota === 'Portatil' ? 'selected' : '' ?>>Portatil</option> <!-- Portatil mota -->
+            <option value="Kontsola" <?= $mota === 'Kontsola' ? 'selected' : '' ?>>Kontsola</option> <!-- Kontsola mota -->
+            <option value="Periferiko" <?= $mota === 'Periferiko' ? 'selected' : '' ?>>Periferiko</option> <!-- Periferiko mota -->
+            <option value="Cascos" <?= $mota === 'Cascos' ? 'selected' : '' ?>>Cascos</option> <!-- Cascos mota -->
         </select>
-        <input type="number" name="prezioa" id="prezioa" value="" placeholder="..€">
-        <!-- Prezioa sartzeko zenbaki kutxa -->
-        <button>Sartu</button> <!-- Formularioa bidaltzeko botoia -->
-    </form> <!-- Formularioa itxi -->
-    <a href="1ariketa.php"><button>Bueltatu horrira</button></a> <!-- 1ariketa.php fitxategira joateko botoi bat -->
+        <br>
+        <label for="prezioa">Prezioa:</label> <!-- Prezioa sartzeko etiketa -->
+        <input type="number" name="prezioa" id="prezioa" value="<?= htmlspecialchars($prezioa) ?>" required> <!-- Prezioa sartzeko laukia -->
+        <br>
+        <input type="submit" value="Eguneratu"> <!-- Eguneratu botoia -->
+    </form>
+    <a href="6ariketa.php"><button>Bueltatu orrira</button></a> <!-- Orrira itzultzeko botoia -->
+</body>
 
-
-
-    <?php //PHP rireki 
-    $sql = "UPDATE produktuak SET izena='$izena', mota='$mota', prezioa='$prezioa' WHERE idProduktua='$idProduktua'"; //SQL update kontsulta bat egin sartutako datuak erabiliz zeudenak aldatuz
-    
-    if ($conn->query($sql) === TRUE) { //Kontsultak funtzionatu duen egiaztatu
-        echo "Record updated successfully"; //Hala bada arrakasta mezua
-    } else {//Bestela 
-        echo "Error updating record: " . $conn->error; //Errore mezua
-    }
-
-    $conn->close(); //Konexioa itxi
-    ?> <!-- PHP itxi -->
-</body> <!-- Body ixtea falta zen -->
-
-</html> <!-- HTML ixtea falta zen -->
+</html>
